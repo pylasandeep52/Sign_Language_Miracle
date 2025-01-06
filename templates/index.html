@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Webcam Viewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* General body styles */
+        body {
+            background-color: #0c2112a9; 
+            font-family: 'Arial', sans-serif; 
+        }
+
+        /* Instructions page container */
+        #instructions-page {
+            background: rgba(255, 255, 255, 0.2); 
+            backdrop-filter: blur(10px); 
+            transition: transform 0.3s ease-in-out; 
+            border-radius: 12px; 
+            padding: 20px; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        }
+
+        /* Button styles */
+        button {
+            transition: background-color 0.3s ease, transform 0.2s ease; 
+        }
+
+        button:hover {
+            transform: translateY(-2px); 
+        }
+
+        /* Feedback message styles */
+        #feedback {
+            font-weight: bold; 
+        }
+
+        /* Background image */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('sign1.jpg') no-repeat center center/cover;
+            opacity: 1.0; 
+            z-index: -1; 
+        }
+
+        /* Responsive text styles */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem; 
+            }
+
+            p {
+                font-size: 0.875rem; 
+            }
+        }
+
+        @media (min-width: 640px) {
+            h1 {
+                font-size: 2rem; 
+            }
+
+            p {
+                font-size: 1rem; 
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div id="instructions-page" class="p-8 rounded-lg shadow-lg max-w-lg w-full h-auto md:h-[500px] md:w-[1000px]">
+        <h1 class="text-2xl font-bold mb-4 text-center">Welcome to Sign Language</h1>
+        <p class="text-gray-700 mb-6 text-center">
+            <b>Instructions</b>
+        </p>
+        <ol class="list-decimal list-inside text-gray-700 mb-6">
+            <li>Please ensure your webcam is properly connected and functional before proceeding.</li>
+            <li>The application will utilize your webcam feed to deliver real-time predictions.</li>
+            <li>Press "Let's Start" to begin.</li>
+        </ol>
+        <p class="text-gray-700 text-center mb-6">Enjoy using the app!</p>
+        <button onclick="startApplicationA()" class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            Let's Start
+        </button>
+        <p id="feedback" class="mt-4 text-center text-green-500 hidden"></p>
+    </div>
+
+    <script>
+        // JavaScript function to call the start-application endpoint
+        function startApplicationA() {
+            // Show loading feedback
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = 'Starting the application...';
+            feedback.classList.remove('hidden');
+
+            fetch('/start-applicationA', { method: 'POST' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    feedback.textContent = 'Application started successfully!';
+                    feedback.classList.remove('text-green-500');
+                    feedback.classList.add('text-blue-500');
+                })
+                .catch(error => {
+                    feedback.textContent = "Error: " + error.message;
+                    feedback.classList.remove('hidden');
+                    feedback.classList.add('text-red-500');
+                });
+        }
+    </script>
+</body>
+</html>
